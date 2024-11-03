@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mavrick</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chatbox { width: 400px; height: 300px; border: 1px solid #ccc; overflow-y: scroll; padding: 10px; }
+        #message { width: 300px; }
+    </style>
+</head>
+<body>
+    <h1>Chat with Mav</h1>
+    <div id="chatbox"></div>
+    <input type="text" id="message" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        function sendMessage() {
+            const messageInput = document.getElementById('message');
+            const userMessage = messageInput.value;
+            if (userMessage) {
+                document.getElementById('chatbox').innerHTML += `<div>You: ${userMessage}</div>`; // Wrapped in quotes
+                messageInput.value = '';
+
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userMessage })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('chatbox').innerHTML += `<div>Mav: ${data.response}</div>`; // Wrapped in quotes
+                });
+            }
+        }
+    </script>
+</body>
+</html>
